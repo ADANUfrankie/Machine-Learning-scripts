@@ -1,0 +1,79 @@
+import numpy as np
+%matplotlib widget
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.preprocessing import StandardScaler, PolynomialFeatures
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.activations import relu,linear
+from tensorflow.keras.losses import SparseCategoricalCrossentropy
+from tensorflow.keras.optimizers import Adam
+
+import logging
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+
+from public_tests_a1 import * 
+
+tf.keras.backend.set_floatx('float64')
+from assigment_utils import *
+
+tf.autograph.set_verbosity(0)
+
+# UNQ_C4
+# GRADED CELL: model_s
+
+tf.random.set_seed(1234)
+model_s = Sequential(
+    [
+        ### START CODE HERE ### 
+        Dense(units=6, activation='relu'),
+        Dense(units=6, activation='linear')
+        
+        ### END CODE HERE ### 
+    ], name = "Simple"
+)
+model_s.compile(
+    ### START CODE HERE ### 
+    loss=SparseCategoricalCrossentropy(from_logits=True),
+    optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
+    ### START CODE HERE ### 
+)
+
+import logging
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+
+# BEGIN UNIT TEST
+model_s.fit(
+    X_train,y_train,
+    epochs=1000
+)
+
+model_s.summary()
+
+##Regularization included in a more complex neural network to compare with the simple one above
+
+tf.random.set_seed(1234)
+model_r = Sequential(
+    [
+        ### START CODE HERE ### 
+        Dense(units=120, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.1)),
+        Dense(units=40, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.1)),
+        Dense(units=6, activation='linear')
+        
+        
+        ### START CODE HERE ### 
+    ], name= None
+)
+model_r.compile(
+    ### START CODE HERE ### 
+    loss=SparseCategoricalCrossentropy(from_logits=True),
+    optimizer=tf.keras.optimizers.Adam(learning_rate = 0.010),
+    ### START CODE HERE ### 
+)
+model_r.fit(
+    X_train, y_train,
+    epochs=1000
+)
